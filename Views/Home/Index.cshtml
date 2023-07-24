@@ -1,8 +1,38 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "서비스 상태 - CloudInteractive Inc.";
 }
+@model DashboardModel
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="section title">
+    <h4>서비스 상태</h4>
+</div>
+
+<div class="notify-area section">
+@foreach (var item in Model.NotifyList)
+{
+    @if (item.Type == NotifyItem.NotifyType.Warn)
+    {
+        <div class="alert card amber accent-4 darkgrey-text">
+            <div class="card-content">
+                    <p><i class="material-icons">report_problem</i><span>@item.Content</span></p>
+            </div>
+        </div>
+    }
+    else if (item.Type == NotifyItem.NotifyType.Error)
+    {
+        <div class="alert card orange darken-4 darkgrey-text">
+            <div class="card-content">
+                    <p><i class="material-icons">report</i><span>@item.Content</span></p>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert card light-blue accent-3 darkgrey-text">
+            <div class="card-content">
+                <p><i class="material-icons">campaign</i><span>@item.Content</span></p>
+            </div>
+        </div>
+    }
+}
 </div>

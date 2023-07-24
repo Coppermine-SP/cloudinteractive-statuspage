@@ -1,22 +1,37 @@
 html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+    font-family: Pretendard;
+    background-color: #1c1c1c;
 }
 
 body {
-  margin-bottom: 60px;
+    margin: 0;
+}
+
+.title {
+    color: white;
+}
+
+.footer p {
+    color: #878787;
+}
+
+.notify-area{
+    margin-top: 0px
+}
+
+.alert .card-content {
+    padding: 12px;
+}
+
+.alert .card-content span {
+    font-weight: bold;
+    font-size: 1.1em;
+    margin-right: 4px;
+}
+
+.alert .card-content .material-icons {
+    font-size: 1.5em;
+    position: relative;
+    top: 5px;
+    margin-right: 0.5em;
 }
