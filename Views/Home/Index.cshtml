@@ -7,32 +7,55 @@
     <h4>서비스 상태</h4>
 </div>
 
+<!-- Notify area -->
 <div class="notify-area section">
-@foreach (var item in Model.NotifyList)
-{
-    @if (item.Type == NotifyItem.NotifyType.Warn)
+    @foreach (var item in Model.NotifyList)
     {
-        <div class="alert card amber accent-4 darkgrey-text">
-            <div class="card-content">
+        @if (item.Type == NotifyItem.NotifyType.Warn)
+        {
+            <div class="alert card amber accent-4 darkgrey-text">
+                <div class="alert-accent orange darken-3"></div>
+                <div class="card-content">
                     <p><i class="material-icons">report_problem</i><span>@item.Content</span></p>
+                </div>
             </div>
-        </div>
-    }
-    else if (item.Type == NotifyItem.NotifyType.Error)
-    {
-        <div class="alert card orange darken-4 darkgrey-text">
-            <div class="card-content">
+        }
+        else if (item.Type == NotifyItem.NotifyType.Error)
+        {
+            <div class="alert card deep-orange accent-2 darkgrey-text">
+                <div class="alert-accent deep-orange accent-4"></div>
+                <div class="card-content">
                     <p><i class="material-icons">report</i><span>@item.Content</span></p>
+                </div>
             </div>
-        </div>
-    }
-    else
-    {
-        <div class="alert card light-blue accent-3 darkgrey-text">
-            <div class="card-content">
-                <p><i class="material-icons">campaign</i><span>@item.Content</span></p>
+        }
+        else
+        {
+            <div class="alert card light-blue accent-3 darkgrey-text">
+                <div class="alert-accent light-blue darken-4"></div>
+                <div class="card-content">
+                    <p><i class="material-icons">campaign</i><span>@item.Content</span></p>
+                </div>
             </div>
-        </div>
+        }
     }
-}
+</div>
+
+<!-- Core service area -->
+<div class="row">
+    <div class="col s12 m12 l3 left-col">
+        <div class="grey darken-4 content-tile">
+
+        </div>
+    </div>
+    <div class="col s12 m12 l9 right-col">
+        <div class="grey darken-4 content-tile">
+
+        </div>
+    </div>
+    <div class="col s12 m12 l12 center-col">
+        <div class="grey darken-4 content-tile">
+
+        </div>
+    </div>
 </div>
