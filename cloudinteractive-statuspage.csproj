@@ -7,4 +7,8 @@
     <RootNamespace>cloudinteractive_statuspage</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Ng.UserAgentService" Version="1.1.2" />
+  </ItemGroup>
+
 </Project>

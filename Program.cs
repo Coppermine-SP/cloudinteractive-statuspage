@@ -1,3 +1,4 @@
+using Ng.Services;
 namespace cloudinteractive_statuspage
 {
     public class Program
@@ -8,6 +9,7 @@ namespace cloudinteractive_statuspage
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddUserAgentService();
 
             var app = builder.Build();
 

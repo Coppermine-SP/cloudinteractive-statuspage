@@ -41,21 +41,40 @@
     }
 </div>
 
-<!-- Core service area -->
 <div class="row">
+    <!-- Core service area -->
     <div class="col s12 m12 l3 left-col">
         <div class="grey darken-4 content-tile">
-
+            <p>Connection</p>
+            <div class="valign-wrapper" style="flex-grow: 1">
+                <div>
+                    <div>
+                        <a id="statebtn" class="green statebtn btn-floating pulse"></a>
+                        <span class="ping" id="latency">-- ms</span>
+                    </div>
+                    <span>@Model.ConnectionState.IP</span>
+                    <span><strong>@Model.ConnectionState.Agent.Platform</strong> (@Model.ConnectionState.Agent.Browser @Model.ConnectionState.Agent.BrowserVersion)</span>
+                </div>
+            </div>
         </div>
+
     </div>
     <div class="col s12 m12 l9 right-col">
         <div class="grey darken-4 content-tile">
-
+            <p>Core Service</p>
         </div>
     </div>
+    <!-- Region service area -->
     <div class="col s12 m12 l12 center-col">
         <div class="grey darken-4 content-tile">
-
         </div>
     </div>
 </div>
+
+<!-- Reference time -->
+<div class="row">
+    <p class="right-align grey-text">Last updated: 2023.7.25 (20:27:16)  <a href="">새로고침</a></p>
+</div>
+
+<!-- page-specific js-->
+<script src="js/dashboard.js"></script>

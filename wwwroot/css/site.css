@@ -22,8 +22,24 @@ body {
 
 .content-tile {
     min-height: 200px;
-    padding: 0px;
+    padding: 20px;
     border-radius: 10px;
+    display: flex;
+    flex-direction: column
+}
+
+.content-tile p {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    font-weight: 500;
+    font-size: 16px;
+    color: white;
+}
+
+.content-tile span {
+    color: white;
+    font-size: 16px;
+    display: block;
 }
 
 .left-col {
@@ -35,7 +51,6 @@ body {
 }
 .center-col {
     padding: 10px 0px 0px 0px !important;
-    min-height: 300px !important;
 }
 @media(min-width:992px) {
     .left-col {
@@ -45,6 +60,22 @@ body {
     .right-col {
         padding: 0px 0px 10px 10px !important;
     }
+}
+
+
+
+/* core service */
+.statebtn {
+    width: 25px;
+    height: 25px;
+    margin-bottom: 6px;
+}
+
+.ping {
+    color: white;
+    margin-left: 5px;
+    font-size: 20px !important;
+    display: inline-block !important;
 }
 
 
