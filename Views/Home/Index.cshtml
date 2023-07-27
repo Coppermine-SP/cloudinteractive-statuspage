@@ -13,7 +13,7 @@
     {
         @if (item.Type == NotifyItem.NotifyType.Warn)
         {
-            <div class="alert card amber accent-4 darkgrey-text">
+            <div class="alert card amber accent-4 black-text">
                 <div class="alert-accent orange darken-3"></div>
                 <div class="card-content">
                     <p><i class="material-icons">report_problem</i><span>@item.Content</span></p>
@@ -22,8 +22,8 @@
         }
         else if (item.Type == NotifyItem.NotifyType.Error)
         {
-            <div class="alert card deep-orange accent-2 darkgrey-text">
-                <div class="alert-accent deep-orange accent-4"></div>
+            <div class="alert card amber accent-4 black-text">
+                <div class="alert-accent deep-orange accent-4 accent-4"></div>
                 <div class="card-content">
                     <p><i class="material-icons">report</i><span>@item.Content</span></p>
                 </div>
@@ -31,7 +31,7 @@
         }
         else
         {
-            <div class="alert card light-blue accent-3 darkgrey-text">
+            <div class="alert card light-blue accent-3 black-text">
                 <div class="alert-accent light-blue darken-4"></div>
                 <div class="card-content">
                     <p><i class="material-icons">campaign</i><span>@item.Content</span></p>
@@ -61,7 +61,23 @@
     </div>
     <div class="col s12 m12 l9 right-col">
         <div class="grey darken-4 content-tile">
-            <p>Core Service</p>
+            <p class="list-header">Core Services</p>
+            <div data-simplebar class="list-wrapper height-fixed">
+                @foreach (var item in Model.CoreServiceList)
+                {
+                    <div class="item-content">
+                        @if (item.IsOnline)
+                        {
+                            <i class="material-icons green-text">check_circle</i>
+                        }
+                        else
+                        {
+                            <i class="material-icons orange-text">warning</i>
+                        }
+                        <span>@item.Name</span>
+                    </div>
+                }
+            </div>
         </div>
     </div>
     <!-- Region service area -->

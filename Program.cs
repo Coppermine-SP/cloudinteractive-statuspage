@@ -1,4 +1,5 @@
 using Ng.Services;
+using cloudinteractive_statuspage.Models;
 namespace cloudinteractive_statuspage
 {
     public class Program
