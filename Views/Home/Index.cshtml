@@ -1,6 +1,7 @@
 ﻿@{
     ViewData["Title"] = "서비스 상태 - CloudInteractive Inc.";
 }
+@using System.ComponentModel.DataAnnotations
 @model DashboardModel
 
 <div class="section title">
@@ -83,13 +84,62 @@
     <!-- Region service area -->
     <div class="col s12 m12 l12 center-col">
         <div class="grey darken-4 content-tile">
+            @foreach (var i in Model.ServiceList)
+            {
+                <div class="region-item">
+                    <div class="valign-wrapper">
+                        @if (i.IsMaintenance)
+                        {
+                            <i class="material-icons orange-text">warning</i>
+                        }
+                        else if (i.SLA < 50)
+                        {
+                            <i class="material-icons orange-text">fiber_manual_record</i>
+                        }
+                        else if (!i.IsOnline)
+                        {
+                            <i class="material-icons red-text">fiber_manual_record</i>
+                        }
+                        else
+                        {
+                            <i class="material-icons green-text">fiber_manual_record</i>
+                        }
+
+                        <p class="sla-percent">
+                            @if (i.IsMaintenance)
+                            {
+                                <span class="orange-text">점검 중</span>
+                            }
+                            else if (i.SLA < 50)
+                            {
+                                <span class="orange-text">주의</span>
+                            }
+                            else if (!i.IsOnline)
+                            {
+                                <span class="red-text">연결 불가</span>
+                            }
+                            else
+                            {
+                                <span class="green-text">정상</span>
+                            }
+                            @i.SLA%<sup>*</sup>
+                        </p>
+                    </div>
+                    <div class="region-info right-align">
+                        <p>@i.SubName</p>
+                        <span>@i.Name</span>
+                    </div>
+                </div>
+            }
+            <p class="bottom-text"><sup>*</sup> 서비스 품질 지수 (SLA Percentage)는 유한회사클라우드인터렉티브가 자체적으로 고시한 기준에 따릅니다. </p>
         </div>
+          
     </div>
 </div>
 
 <!-- Reference time -->
 <div class="row">
-    <p class="right-align grey-text">Last updated: 2023.7.25 (20:27:16)  <a href="">새로고침</a></p>
+    <p class="right-align grey-text">Last updated: @Model.TimeStampToString() <a href="">새로고침</a></p>
 </div>
 
 <!-- page-specific js-->

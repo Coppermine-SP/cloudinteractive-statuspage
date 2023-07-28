@@ -5,19 +5,42 @@ namespace cloudinteractive_statuspage.Models
     {
         public List<NotifyItem> NotifyList = new List<NotifyItem>();
         public List<CoreServiceStateItem> CoreServiceList = new List<CoreServiceStateItem>();
+        public List<ServiceStateItem> ServiceList = new List<ServiceStateItem>();
         public ConnectionStateItem ConnectionState;
+        public DateTime TimeStamp { get; private set; }
 
         public void Vaildate()
         {
-            var core_offline = from i in CoreServiceList where !i.IsOnline select i.Name;
+            var coreOffline = from i in CoreServiceList where !i.IsOnline select i.Name;
+            var serviceOffline = from i in ServiceList where !i.IsOnline select i.Name;
+            var serviceMaintenance = from i in ServiceList where i.IsMaintenance select i.Name;
 
-            if (core_offline.Count() != 0)
+            if (coreOffline.Count() != 0)
             {
-               string lst = String.Join(", ", core_offline);
+               string lst = String.Join(", ", coreOffline);
                NotifyList.Insert(0, new NotifyItem(NotifyItem.NotifyType.Error, $"다음 코어 서비스에 문제가 있습니다 : '{lst}'"));
             }
 
-            
+            if (serviceOffline.Count() != 0)
+            {
+                string lst = String.Join(", ", serviceOffline);
+                NotifyList.Insert(0, new NotifyItem(NotifyItem.NotifyType.Error, $"다음 서비스에 문제가 있습니다 : '{lst}'"));
+            }
+
+            if (serviceMaintenance.Count() != 0)
+            {
+                string lst = String.Join(", ", serviceMaintenance);
+                NotifyList.Insert(0, new NotifyItem(NotifyItem.NotifyType.Warn, $"다음 서비스가 점검 중입니다 : '{lst}'"));
+            }
+
+            TimeStamp = DateTime.Now;
+
+
+        }
+
+        public string TimeStampToString()
+        {
+            return $"{TimeStamp.Year}.{TimeStamp.Month}.{TimeStamp.Day} ({TimeStamp.Hour}:{TimeStamp.Minute}:{TimeStamp.Second})";
         }
     }
 

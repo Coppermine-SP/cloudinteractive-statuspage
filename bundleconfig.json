@@ -10,5 +10,11 @@
     "inputFiles": [
       "wwwroot/lib/simplebar/css/simplebar.css"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/lib/tooltips/css/tooltips.min.css",
+    "inputFiles": [
+      "wwwroot/lib/tooltips/css/tooltips.css"
+    ]
   }
 ]

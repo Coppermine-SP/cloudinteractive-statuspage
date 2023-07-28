@@ -147,3 +147,41 @@ body {
     margin-top: 4px;
 }
 
+/* regions */
+.region-item {
+    display: flex;
+    height: 80px;
+    background-color: #1c1c1c;
+    border-radius: 5px;
+    padding: 10px 20px 10px 20px;
+    margin-bottom: 20px;
+}
+
+.sla-percent {
+    margin-left: 20px;
+    font-size: 22px !important;
+    letter-spacing: 1.0px;
+}
+
+.sla-percent sup {
+    color: #8c8c8c;
+}
+
+.bottom-text {
+    color: #878787 !important;
+    font-size: 14px !important;
+}
+
+.region-info {
+    flex-grow: 1;
+}
+
+.region-info span {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.region-info p {
+    font-weight: 300;
+}
+
