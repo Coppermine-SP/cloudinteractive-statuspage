@@ -1,26 +1,60 @@
+using System.Text;
+using System.Text.Json.Serialization;
+using System.Windows;
 using Ng.Services;
-using cloudinteractive_statuspage.Models;
+using cloudinteractive_statuspage.Services;
 namespace cloudinteractive_statuspage
 {
     public class Program
     {
+        private static ILogger logger;
+        private static bool isDevelopement = true;
         public static void Main(string[] args)
         {
+            Console.WriteLine("cloudinteractive_statuspage - Server\nCopyright (C) 2017-2023 CloudInteractive Inc.\n\n");
             var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                });
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddUserAgentService();
+            builder.Services.AddSingleton<Configuration.ConfigService>(x =>
+                new Configuration.ConfigService(x));
+            builder.Services.AddSingleton<NotifyService>(x =>
+                new NotifyService(x));
+            builder.Services.AddSingleton<WatchdogService>( x=>
+                new WatchdogService(x));
+
 
             var app = builder.Build();
+            var config = app.Services.GetService<Configuration.ConfigService>();
+            var notifyService = app.Services.GetService<NotifyService>();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
+                isDevelopement = false;
                 app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            // Load configurations.
+            try
+            {
+                config.Init();
+            }
+            catch (Exception e)
+            {
+                ExitWithError(e);
+            }
+
+            // Load notification from file.
+            //notifyService.LoadFromFile();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -34,6 +68,19 @@ namespace cloudinteractive_statuspage
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
+        }
+
+        public static void ExitWithError(Exception e)
+        {
+            logger.LogCritical("Program has encountered a problem and need to close. We are sorry for the Inconvenience. ");
+            logger.LogCritical("CriticalException : " + e);
+
+            if (isDevelopement)
+            {
+                Console.WriteLine("\nPress any key to exit..");
+                Console.ReadKey();
+                Environment.Exit(0);
+            }
         }
     }
 }

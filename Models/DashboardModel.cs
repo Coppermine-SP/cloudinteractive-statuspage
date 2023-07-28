@@ -1,4 +1,5 @@
 ﻿using Ng.Services;
+using cloudinteractive_statuspage.Services;
 namespace cloudinteractive_statuspage.Models
 {
     public class DashboardModel
@@ -41,6 +42,16 @@ namespace cloudinteractive_statuspage.Models
         public string TimeStampToString()
         {
             return $"{TimeStamp.Year}.{TimeStamp.Month}.{TimeStamp.Day} ({TimeStamp.Hour}:{TimeStamp.Minute}:{TimeStamp.Second})";
+        }
+
+        public static List<NotifyItem> ConvertToNotifyItemList(List<Notify> list)
+        {
+            var result = new List<NotifyItem>();
+            foreach (var item in list)
+            {
+                result.Add(new NotifyItem(item.Type == Notify.NotifyType.Info ? NotifyItem.NotifyType.Info : NotifyItem.NotifyType.Warn, item.Content));
+            }
+            return result;
         }
     }
 

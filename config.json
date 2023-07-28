@@ -1,0 +1,25 @@
+{
+  "ServerConfig": {
+    "PollingRate": 50000,
+    "CoreServices": [
+      {
+        "IP": "10.10.2.10",
+        "Port": 21,
+        "Name": "로그온 및 도메인 서비스"
+      },
+      {
+        "IP": "10.10.2.10",
+        "Port": 53,
+        "Name": "냬부 DNS 서비스"
+      }
+    ],
+    "Services": [
+      {
+        "Name": "C1",
+        "SubName": "대한민국 남부",
+        "Url": "c1.cloudinteractive.net",
+        "isMaintenance": false 
+      }
+    ] 
+  } 
+}
