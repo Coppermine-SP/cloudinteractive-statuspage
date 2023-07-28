@@ -66,12 +66,12 @@ config.json should be configured as the below example.
   } 
 }
 ```
-**PollingRate** - how often the server gets the services' status and is a unit of calculating the service quality index (SLA Percent).
-**CoreService** - Services that need to be managed individually. it is monitored by a TCP port. (not calculating SLA Percent.)
-**Services** - Server or region that needs to be managed by one IP or URL. it is monitored by ICMP ping or HTTP response.
+**PollingRate** - how often the server gets the services' status and is a unit of calculating the service quality index (SLA Percent).  
+**CoreService** - Services that need to be managed individually. it is monitored by a TCP port. (not calculating SLA Percent.)  
+**Services** - Server or region that needs to be managed by one IP or URL. it is monitored by ICMP ping or HTTP response.  
 
-notify.json file contains the content of the main page's top banner notifications. 
-notify.json file is optional and can be configured as in the below example.
+notify.json file contains the content of the main page's top banner notifications.   
+notify.json file is optional and can be configured as in the below example.  
 
 ```
 {
@@ -90,5 +90,5 @@ notify.json file is optional and can be configured as in the below example.
 }
 ```
 
-**Type** - type of the notification: warn, info
+**Type** - type of the notification: warn, info  
 **Content** - notification content.
