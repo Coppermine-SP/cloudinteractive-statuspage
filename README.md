@@ -19,6 +19,10 @@ cloudinteractive-statuspage is a simple Microsoft ASP.NET Core MVC-based service
 * [Ng.UserAgentService](https://github.com/DannyBoyNg/UserAgentService) - MIT License
 
 ## Configuration
+
+
+
+### config.json
 config.json file should be in the root folder. server will be failed to initialize if config.json file doesn't exist.
 config.json should be configured as the below example.
 
@@ -70,6 +74,9 @@ config.json should be configured as the below example.
 **CoreService** - Services that need to be managed individually. it is monitored by a TCP port. (not calculating SLA Percent.)  
 **Services** - Server or region that needs to be managed by one IP or URL. it is monitored by ICMP ping or HTTP response.  
 
+
+
+### notify.json
 notify.json file contains the content of the main page's top banner notifications.   
 notify.json file is optional and can be configured as in the below example.  
 
