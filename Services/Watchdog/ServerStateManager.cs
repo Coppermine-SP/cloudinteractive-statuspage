@@ -25,12 +25,12 @@
             _disposed = false;
         }
 
-        public ServerStateManager AddObserver(string key, string address, StateObserver.ErrorCallback errorCallback, EAddressType addressType)
+        public ServerStateManager AddObserver(ILogger logger, string key, string address, StateObserver.ErrorCallback errorCallback, EAddressType addressType)
         {
             if (_observerTable.ContainsKey(key))
-                throw new Exception("이미 등록된 key");
+                throw new Exception("duplicated key.");
 
-            _observerTable.Add(key, new StateObserver(address, addressType, errorCallback, _pollingIntervalMs, _pingTimeoutMs, _offDecidingTimeMs));
+            _observerTable.Add(key, new StateObserver(logger, address, addressType, errorCallback, _pollingIntervalMs, _pingTimeoutMs, _offDecidingTimeMs));
 
             return this;
         }

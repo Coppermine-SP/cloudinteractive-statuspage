@@ -11,6 +11,7 @@ namespace cloudinteractive_statuspage.Services.Watchdog
     }
     public class StateObserver
     {
+        private ILogger _logger;
         public delegate void ErrorCallback(StateObserver observer);
 
         private string _targetHostName;
@@ -30,7 +31,12 @@ namespace cloudinteractive_statuspage.Services.Watchdog
         public bool Disposed => _disposed;
         public Exception? ObserverException => _observerException;
 
-        public StateObserver(string hostName, EAddressType addressType, ErrorCallback errorCallback, int pollingInterval, int pingTimeout, int offDecidingTime)
+        private void _log(LogLevel level, string message)
+        {
+            _logger?.Log(level, $"observer-#{_thread?.ManagedThreadId ?? 0} / {message}");
+        }
+
+        public StateObserver(ILogger logger, string hostName, EAddressType addressType, ErrorCallback errorCallback, int pollingInterval, int pingTimeout, int offDecidingTime)
         {
             _targetHostName = hostName;
             _addressType = addressType;
@@ -39,6 +45,7 @@ namespace cloudinteractive_statuspage.Services.Watchdog
             _pingTimeout = pingTimeout;
             _disposed = false;
             _errorCallback = errorCallback;
+            _logger = logger;
         }
 
         ~StateObserver()
@@ -53,6 +60,7 @@ namespace cloudinteractive_statuspage.Services.Watchdog
             await Task.Run(() =>
             {
                 _thread = new Thread(ThreadRun);
+                _log(LogLevel.Information,$"Observer thread start. ({_targetHostName})");
                 _thread.IsBackground = true;
                 _thread.Start();
             });
@@ -105,10 +113,12 @@ namespace cloudinteractive_statuspage.Services.Watchdog
         public double SLA { get; private set; }
         private IPAddress? _GetDnsQuery(string hostName)
         {
+            IPAddress ip;
+            if(IPAddress.TryParse(hostName, out ip)) return ip;
+
             IPHostEntry entry = Dns.GetHostEntry(hostName);
 
             if (entry.AddressList.Length == 0) return null;
-
             return entry.AddressList[0];
         }
 
@@ -131,12 +141,13 @@ namespace cloudinteractive_statuspage.Services.Watchdog
         }
         private bool CheckStateWithPing(IPAddress addr)
         {
-            Ping ping = new Ping();
-            PingOptions pingOption = new PingOptions();
-            pingOption.DontFragment = true;
-            PingReply reply = ping.Send(addr, _pingTimeout);
-
-            return reply.Status == IPStatus.Success;
+            using (Ping ping = new Ping())
+            {
+                //PingOptions pingOption = new PingOptions();
+                //pingOption.DontFragment = true;
+                PingReply reply = ping.Send(addr, _pingTimeout);
+                return reply.Status == IPStatus.Success;
+            }
         }
         private bool CheckStateWithTelnet(IPAddress addr, int port)
         {
@@ -189,7 +200,7 @@ namespace cloudinteractive_statuspage.Services.Watchdog
 
                         _serverLastTimestamp = DateTime.Now;
 
-
+                        if (_isServerOff) _log(LogLevel.Warning, $"{_targetHostName} is now online.");
                         _isServerOff = false;
                     }
                     else
@@ -200,6 +211,7 @@ namespace cloudinteractive_statuspage.Services.Watchdog
 
                         if (timeSpan.Milliseconds >= _offDecidingTime)
                         {
+                            if(!_isServerOff) _log(LogLevel.Warning,$"{_targetHostName} is now offline.");
                             _isServerOff = true;
                         }
                     }

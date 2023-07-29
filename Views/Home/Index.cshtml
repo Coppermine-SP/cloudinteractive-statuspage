@@ -92,7 +92,7 @@
                         {
                             <i class="material-icons orange-text">warning</i>
                         }
-                        else if (i.SLA < 50)
+                        else if (i.SLA < 50 && i.IsOnline)
                         {
                             <i class="material-icons orange-text">fiber_manual_record</i>
                         }
@@ -110,7 +110,7 @@
                             {
                                 <span class="orange-text">점검 중</span>
                             }
-                            else if (i.SLA < 50)
+                            else if (i.SLA < 50 && i.IsOnline)
                             {
                                 <span class="orange-text">주의</span>
                             }

@@ -4,7 +4,7 @@
     "CoreServices": [
       {
         "IP": "10.10.2.10",
-        "Port": 21,
+        "Port": 135,
         "Name": "로그온 및 도메인 서비스"
       },
       {
@@ -21,11 +21,17 @@
         "isMaintenance": false
       },
       {
-        "Name": "테스트-구글",
-        "SubName": "?",
-        "Url": "www.google.com",
+        "Name": "C2",
+        "SubName": "대한민국 남부",
+        "Url": "c2.cloudinteractive.net",
+        "isMaintenance": false
+      },
+      {
+        "Name": "C3",
+        "SubName": "대한민국 남부",
+        "Url": "10.10.2.205",
         "isMaintenance": false
       }
-    ] 
-  } 
+    ]
+  }
 }

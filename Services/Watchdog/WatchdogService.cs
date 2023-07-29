@@ -1,5 +1,7 @@
 ﻿using cloudinteractive_statuspage.Models;
 using cloudinteractive_statuspage.Services.Watchdog;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using static cloudinteractive_statuspage.Services.Configuration;
 
 namespace cloudinteractive_statuspage.Services
@@ -33,14 +35,12 @@ namespace cloudinteractive_statuspage.Services
 
             foreach (var service in config.Services)
             {
-                _logger.LogInformation($"service name: {service.Name}, URI: {service.Url}");
-                _serverStateManager.AddObserver(service.Url, service.Url, x => _logger.LogError(x.ObserverException, null), EAddressType.DNS);
+                _serverStateManager.AddObserver(_serviceProvider.GetRequiredService<ILogger<StateObserver>>(), service.Url, service.Url, x => _logger.LogError(x.ObserverException, null), EAddressType.DNS);
             }
             foreach (var coreService in config.CoreServices)
             {
-                _logger.LogInformation($"CoreService name: {coreService.Name}, IP: {coreService.IP}, Port: {coreService.Port}");
                 string addr = $"{coreService.IP}:{coreService.Port}";
-                _serverStateManager.AddObserver(addr, addr, x => _logger.LogError(x.ObserverException, null), EAddressType.IPv4);
+                _serverStateManager.AddObserver(_serviceProvider.GetRequiredService<ILogger<StateObserver>>(), addr, addr, x => _logger.LogError(x.ObserverException, null), EAddressType.IPv4);
             }
 
             _serverStateManager.StartAsync().Wait();

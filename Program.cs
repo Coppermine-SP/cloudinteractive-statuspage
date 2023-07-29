@@ -48,14 +48,14 @@ namespace cloudinteractive_statuspage
             // Load configurations.
             try
             {
-                config.Init();
+                config?.Init();
             }
             catch (Exception e)
             {
                 ExitWithError(e);
             }
 
-            // byJun, 7/29/23
+            // watchdogService Init.
             try
             {
                 watchdogService?.Init();
@@ -65,8 +65,8 @@ namespace cloudinteractive_statuspage
                 ExitWithError(e);
             }
 
-            // Load notification from file.
-            //notifyService.LoadFromFile();
+            // Load notifications from file.
+            notifyService?.LoadFromFile();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
