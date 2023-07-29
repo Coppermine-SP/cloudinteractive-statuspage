@@ -1,6 +1,8 @@
 {
   "ServerConfig": {
-    "PollingRate": 1000,
+    "ObserverTimeWindow": 1000,
+    "TimeoutThreshold": 1000,
+    "ShowAutoSummary": true,
     "CoreServices": [
       {
         "IP": "10.10.2.10",

@@ -1,4 +1,4 @@
-﻿var serverUrl = 'https://google.com';
+﻿var serverUrl = 'https://corp.cloudinteractive.net';
 
 function get_latency() {
     var startTime = new Date().getTime();

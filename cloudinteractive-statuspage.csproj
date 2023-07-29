@@ -23,10 +23,10 @@
 
   <ItemGroup>
     <Content Update="config.json">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Update="notify.json">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Update="wwwroot\lib\simplebar\css\simplebar.css">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>

@@ -3,6 +3,8 @@ using System.Text.Json.Serialization;
 using System.Windows;
 using Ng.Services;
 using cloudinteractive_statuspage.Services;
+using cloudinteractive_statuspage.Services.Watchdog;
+
 namespace cloudinteractive_statuspage
 {
     public class Program
@@ -26,15 +28,14 @@ namespace cloudinteractive_statuspage
                 new Configuration.ConfigService(x));
             builder.Services.AddSingleton<NotifyService>(x =>
                 new NotifyService(x));
-            builder.Services.AddSingleton<WatchdogService>( x=>
-                new WatchdogService(x));
+            builder.Services.AddSingleton<ObserverPoolService>( x=>
+                new ObserverPoolService(x));
 
 
             var app = builder.Build();
             var config = app.Services.GetService<Configuration.ConfigService>();
             var notifyService = app.Services.GetService<NotifyService>();
-            // byJun, 7/29/23
-            var watchdogService = app.Services.GetService<WatchdogService>();
+            var observerPoolService = app.Services.GetService<ObserverPoolService>();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -55,10 +56,10 @@ namespace cloudinteractive_statuspage
                 ExitWithError(e);
             }
 
-            // watchdogService Init.
+            // observerPoolService Init.
             try
             {
-                watchdogService?.Init();
+                observerPoolService?.Init();
             }
             catch (Exception e)
             {

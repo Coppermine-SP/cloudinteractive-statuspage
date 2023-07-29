@@ -12,13 +12,16 @@ namespace cloudinteractive_statuspage.Services.Watchdog
     public class StateObserver
     {
         private ILogger _logger;
+        public int RefTimeWindow { get; private set; }
+        public int RefTimeout { get; private set; }
+        public Int64 TotalTimeWindow { get; private set; } = 0;
+        public double FailedTimeWindow { get; private set; } = 0;
+        public double ServiceQuality { get; private set; }
+
         public delegate void ErrorCallback(StateObserver observer);
 
         private string _targetHostName;
         private EAddressType _addressType;
-        private int _pingTimeout;
-        private int _offDecidingTime;
-        private int _pollingIntervalMs;
 
         private ErrorCallback _errorCallback;
 
@@ -30,22 +33,23 @@ namespace cloudinteractive_statuspage.Services.Watchdog
         public string TargetHostName => _targetHostName;
         public bool Disposed => _disposed;
         public Exception? ObserverException => _observerException;
+        public int ThreadId { get; private set; }
 
         private void _log(LogLevel level, string message)
         {
             _logger?.Log(level, $"observer-#{_thread?.ManagedThreadId ?? 0} / {message}");
         }
 
-        public StateObserver(ILogger logger, string hostName, EAddressType addressType, ErrorCallback errorCallback, int pollingInterval, int pingTimeout, int offDecidingTime)
+        public StateObserver(ILogger logger, string hostName, EAddressType addressType, ErrorCallback errorCallback, int timeWindow, int timeOut)
         {
+            RefTimeWindow = timeWindow;
+            RefTimeout = timeOut;
             _targetHostName = hostName;
             _addressType = addressType;
-            _pollingIntervalMs = pollingInterval;
-            _offDecidingTime = offDecidingTime;
-            _pingTimeout = pingTimeout;
             _disposed = false;
             _errorCallback = errorCallback;
             _logger = logger;
+            ThreadId = _thread?.ManagedThreadId ?? 0;
         }
 
         ~StateObserver()
@@ -89,7 +93,7 @@ namespace cloudinteractive_statuspage.Services.Watchdog
                     while (!_disposed)
                     {
                         Poll();
-                        Thread.Sleep(_pollingIntervalMs);
+                        Thread.Sleep(RefTimeWindow);
                     }
                 }
                 catch (ThreadInterruptedException) { return; }
@@ -103,14 +107,10 @@ namespace cloudinteractive_statuspage.Services.Watchdog
             }
         }
 
-        private bool _firstRequest = true;
-        private DateTime _serverBeginTimestamp;
-        private DateTime _serverLastTimestamp;
-        private double _totalUptime = 0.0;
+        private int _currentRetryCount = 0;
         private volatile bool _isServerOff = true;
 
         public bool IsServerOnline => !(_isServerOff);
-        public double SLA { get; private set; }
         private IPAddress? _GetDnsQuery(string hostName)
         {
             IPAddress ip;
@@ -129,7 +129,6 @@ namespace cloudinteractive_statuspage.Services.Watchdog
         private (string, int?) ParseAddressAndPort(string rawHostName)
         {
             int index = rawHostName.IndexOf(':');
-
             if (index == -1)
                 return (rawHostName, null);
 
@@ -145,7 +144,8 @@ namespace cloudinteractive_statuspage.Services.Watchdog
             {
                 //PingOptions pingOption = new PingOptions();
                 //pingOption.DontFragment = true;
-                PingReply reply = ping.Send(addr, _pingTimeout);
+                
+                PingReply reply = ping.Send(addr, RefTimeout);
                 return reply.Status == IPStatus.Success;
             }
         }
@@ -167,7 +167,6 @@ namespace cloudinteractive_statuspage.Services.Watchdog
         private void Poll()
         {
             IPAddress? targetAddr;
-
             (string, int?) tuple = ParseAddressAndPort(_targetHostName);
 
             if (_addressType == EAddressType.DNS)
@@ -182,57 +181,34 @@ namespace cloudinteractive_statuspage.Services.Watchdog
                 success = tuple.Item2.HasValue ? CheckStateWithTelnet(targetAddr, tuple.Item2.Value) : CheckStateWithPing(targetAddr);
             }
 
+            TotalTimeWindow += 1;
             try
             {
                 checked
                 {
                     if (success)
                     {
-                        // 만약, 최초 핑 요청일 때 타임스탬프 기록 
-                        if (_firstRequest)
+                        if (_isServerOff)
                         {
-                            _firstRequest = false;
-                            _serverLastTimestamp = _serverBeginTimestamp = DateTime.Now;
+                            FailedTimeWindow += _currentRetryCount;
+                            _currentRetryCount = 0;
+                            _log(LogLevel.Warning, $"{_targetHostName} is now online.");
                         }
-
-                        var time = DateTime.Now - _serverLastTimestamp;
-                        _totalUptime = time.TotalMilliseconds + _totalUptime;
-
-                        _serverLastTimestamp = DateTime.Now;
-
-                        if (_isServerOff) _log(LogLevel.Warning, $"{_targetHostName} is now online.");
                         _isServerOff = false;
                     }
                     else
                     {
-                        // 일정시간 응답이 없었다면 서버 off 판정
-                        var current = DateTime.Now;
-                        var timeSpan = current - _serverLastTimestamp;
-
-                        if (timeSpan.Milliseconds >= _offDecidingTime)
-                        {
-                            if(!_isServerOff) _log(LogLevel.Warning,$"{_targetHostName} is now offline.");
+                        if(!_isServerOff) _log(LogLevel.Warning,$"{_targetHostName} is now offline.");
                             _isServerOff = true;
-                        }
+                            FailedTimeWindow += 1;
                     }
-
-
-                    if (_firstRequest)
-                    {
-                        SLA = 0.0;
-                    }
-                    else
-                    {
-                        var totalTime = DateTime.Now - _serverBeginTimestamp;
-                        SLA = _totalUptime / totalTime.TotalMilliseconds * 100.0;
-                    }
+                    ServiceQuality =  (1 -(FailedTimeWindow / TotalTimeWindow)) * 100.0;
                 }
             }
             catch (OverflowException)
             {
-                _firstRequest = true;
-                _serverLastTimestamp = _serverBeginTimestamp = DateTime.Now;
-                _totalUptime = 0;
+                TotalTimeWindow = 0;
+                FailedTimeWindow = 0;
             }
         }
     }

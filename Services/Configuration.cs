@@ -23,7 +23,9 @@ namespace cloudinteractive_statuspage.Services
         {
             public List<CoreService> CoreServices { get; set; }
             public List<Service> Services { get; set; }
-            public int PollingRate { get; set; }
+            public int ObserverTimeWindow { get; set; }
+            public int TimeoutThreshold { get; set; }
+            public bool ShowAutoSummary { get; set; }
         }
 
         public class ConfigService
@@ -38,7 +40,9 @@ namespace cloudinteractive_statuspage.Services
 
             public CoreService[] CoreServices { get; private set; }
             public Service[] Services { get; private set; }
-            public int PollingRateMs { get; private set; }
+            public int TimeoutThreshold { get; private set; }
+            public int ObserverTimeWindow { get; private set; }
+            public bool ShowAutoSummary { get; private set; }
 
             public void Init()
             {
@@ -56,7 +60,9 @@ namespace cloudinteractive_statuspage.Services
                     _logger.LogInformation($"{serverConfig.CoreServices.Count} CoreServices, {serverConfig.Services.Count} Services configured.");
                     CoreServices = serverConfig.CoreServices.ToArray();
                     Services = serverConfig.Services.ToArray();
-                    PollingRateMs = serverConfig.PollingRate;
+                    ObserverTimeWindow = serverConfig.ObserverTimeWindow;
+                    TimeoutThreshold = serverConfig.TimeoutThreshold;
+                    ShowAutoSummary = serverConfig.ShowAutoSummary;
                 }
                 catch (Exception e)
                 {
