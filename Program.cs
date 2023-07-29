@@ -33,6 +33,8 @@ namespace cloudinteractive_statuspage
             var app = builder.Build();
             var config = app.Services.GetService<Configuration.ConfigService>();
             var notifyService = app.Services.GetService<NotifyService>();
+            // byJun, 7/29/23
+            var watchdogService = app.Services.GetService<WatchdogService>();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -47,6 +49,16 @@ namespace cloudinteractive_statuspage
             try
             {
                 config.Init();
+            }
+            catch (Exception e)
+            {
+                ExitWithError(e);
+            }
+
+            // byJun, 7/29/23
+            try
+            {
+                watchdogService?.Init();
             }
             catch (Exception e)
             {

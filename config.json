@@ -1,6 +1,6 @@
 {
   "ServerConfig": {
-    "PollingRate": 50000,
+    "PollingRate": 1000,
     "CoreServices": [
       {
         "IP": "10.10.2.10",
@@ -18,7 +18,13 @@
         "Name": "C1",
         "SubName": "대한민국 남부",
         "Url": "c1.cloudinteractive.net",
-        "isMaintenance": false 
+        "isMaintenance": false
+      },
+      {
+        "Name": "테스트-구글",
+        "SubName": "?",
+        "Url": "www.google.com",
+        "isMaintenance": false
       }
     ] 
   } 

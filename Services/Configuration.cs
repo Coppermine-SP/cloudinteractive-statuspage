@@ -38,6 +38,7 @@ namespace cloudinteractive_statuspage.Services
 
             public CoreService[] CoreServices { get; private set; }
             public Service[] Services { get; private set; }
+            public int PollingRateMs { get; private set; }
 
             public void Init()
             {
@@ -55,6 +56,7 @@ namespace cloudinteractive_statuspage.Services
                     _logger.LogInformation($"{serverConfig.CoreServices.Count} CoreServices, {serverConfig.Services.Count} Services configured.");
                     CoreServices = serverConfig.CoreServices.ToArray();
                     Services = serverConfig.Services.ToArray();
+                    PollingRateMs = serverConfig.PollingRate;
                 }
                 catch (Exception e)
                 {

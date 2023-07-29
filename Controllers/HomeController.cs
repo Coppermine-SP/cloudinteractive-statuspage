@@ -1,7 +1,9 @@
 ﻿using cloudinteractive_statuspage.Models;
 using cloudinteractive_statuspage.Services;
+using cloudinteractive_statuspage.Services.Watchdog;
 using Microsoft.AspNetCore.Mvc;
 using Ng.Services;
+using static cloudinteractive_statuspage.Services.Configuration;
 
 namespace cloudinteractive_statuspage.Controllers
 {
@@ -10,17 +12,43 @@ namespace cloudinteractive_statuspage.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IUserAgentService _userAgentService;
         private readonly NotifyService _notifyService;
+        private readonly WatchdogService _watchdogService;
+        private readonly ConfigService _configService;
 
-        public HomeController(ILogger<HomeController> logger, IUserAgentService userAgentService, NotifyService notifyService)
+        public HomeController(ILogger<HomeController> logger, IUserAgentService userAgentService, NotifyService notifyService, WatchdogService watchdogService, ConfigService configService)
         {
             _logger = logger;
             _userAgentService = userAgentService;
             _notifyService = notifyService;
+            _watchdogService = watchdogService;
+            _configService = configService;
         }
 
         public IActionResult Index()
         {
-            var model = TestModelDriver.CreateModel(DashboardModel.ConvertToNotifyItemList(_notifyService.Notices));
+            var model = new DashboardModel();
+
+            model.NotifyList = DashboardModel.ConvertToNotifyItemList(_notifyService.Notices);
+
+            foreach (var coreService in _configService.CoreServices)
+            {
+                string addr = $"{coreService.IP}:{coreService.Port}";
+                StateObserver? observer = _watchdogService.StateManager?.GetObserver(addr);
+
+                if (observer != null)
+                    model.CoreServiceList.Add(new CoreServiceStateItem(coreService.Name, observer.IsServerOnline));
+            }
+            foreach (var service in _configService.Services)
+            {
+                StateObserver? observer = _watchdogService.StateManager?.GetObserver(service.Url);
+
+                if (observer != null)
+                {
+                    float sla = (float)Math.Round(observer.SLA, 1);
+                    model.ServiceList.Add(new ServiceStateItem(service.Name, service.SubName, observer.IsServerOnline, service.IsMaintenance, sla));
+                }
+            }
+
             model.ConnectionState = _getClientInfo();
             model.Vaildate();
             return View(model);
