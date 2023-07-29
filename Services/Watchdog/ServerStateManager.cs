@@ -35,11 +35,11 @@
             return this;
         }
 
-        public StateObserver GetObserver(string key)
+        public StateObserver? GetObserver(string key)
         {
             if (_observerTable.ContainsKey(key)) return _observerTable[key];
 
-            throw new Exception("등록되지 않은 key");
+            return null;
         }
 
         public StateObserver[] GetObserverAll() => _observerTable.Values.ToArray();
