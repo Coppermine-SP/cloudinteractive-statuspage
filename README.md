@@ -22,56 +22,56 @@ cloudinteractive-statuspage is a simple Microsoft ASP.NET Core MVC-based service
 
 
 ### config.json
-config.json file should be in the root folder. server will fail to initialize if the config.json file doesn't exist.
+config.json file should be in the root folder.
+
 config.json should be configured as the below example.
 
 ```
 {
   "ServerConfig": {
-    "PollingRate": 50000,
+    "ObserverTimeWindow": 1000,
+    "TimeoutThreshold": 1000,
+    "ShowAutoSummary": true,
     "CoreServices": [
       {
-        "IP": "10.10.208.254",
+        "IP": "10.10.20.10",
         "Port": 135,
-        "Name": "Active Directory Domain Service"
+        "Name": "AD Domain Service"
       },
       {
-        "IP": "10.10.208.254",
-        "Port": 67,
-        "Name": "DHCP and PXE Service"
-      },
-      {
-        "IP": "10.10.208.251",
+        "IP": "10.10.20.10",
         "Port": 53,
-        "Name": "DNS Service"
+        "Name": "Internal DNS Service"
       }
     ],
     "Services": [
       {
-        "Name": "C1",
-        "SubName": "Korea Central",
-        "Url": "c1.foo.com",
-        "isMaintenance": false 
+        "Name": "A1",
+        "SubName": "East US",
+        "Url": "a1.foo.net",
+        "isMaintenance": false
       },
       {
-        "Name": "C2",
-        "SubName": "East US",
-        "Url": "c2.foo.com",
-        "isMaintenance": false 
+        "Name": "B2",
+        "SubName": "Korea Central",
+        "Url": "b2.foo.net",
+        "isMaintenance": false
       },
       {
         "Name": "C3",
-        "SubName": "West US",
-        "Url": "c3.foo.com",
-        "isMaintenance": true 
+        "SubName": "Korea South",
+        "Url": "c3.foo.net",
+        "isMaintenance": false
       }
-    ] 
-  } 
+    ]
+  }
 }
 ```
-**PollingRate** - how often the server gets the services' status and is a unit of calculating the service quality index (SLA Percent).  
-**CoreService** - Services that need to be managed individually. it is monitored by a TCP port. (not calculating SLA Percent.)  
-**Services** - Server or region that needs to be managed by one IP or URL. it is monitored by ICMP ping or HTTP response.  
+-  **ObserverTimeWindow:** Frequency at which the server checks the status of the services. It serves as the unit used to calculate the service quality index.
+-  **TimeoutThreshold:** Threshold at which the server determines service is offline.
+-  **ShowAutoSummary:** Show the auto-summary of the service status.
+-  **CoreService:** These are essential services that need individual management and are monitored via a TCP port. They do not have a service quality index associated with them.
+-  **Services:** Server or region that needs to be managed by one IP or URL. it is monitored by ICMP ping or HTTP response.
 
 
 
@@ -96,5 +96,5 @@ notify.json file is optional and can be configured as in the below example.
 }
 ```
 
-**Type** - type of the notification: warn, info  
-**Content** - notification content.
+-  **Type:** `Warn`, `Info` 
+-  **Content:** Content of notification.
