@@ -1,0 +1,146 @@
+﻿@{
+    ViewData["Title"] = "서비스 상태 - CloudInteractive Inc.";
+}
+@using System.ComponentModel.DataAnnotations
+@model DashboardModel
+
+<div class="section title">
+    <h4>서비스 상태</h4>
+</div>
+
+<!-- Notify area -->
+<div class="notify-area section">
+    @foreach (var item in Model.NotifyList)
+    {
+        @if (item.Type == NotifyItem.NotifyType.Warn)
+        {
+            <div class="alert card amber accent-4 black-text">
+                <div class="alert-accent orange darken-3"></div>
+                <div class="card-content">
+                    <p><i class="material-icons">report_problem</i><span>@item.Content</span></p>
+                </div>
+            </div>
+        }
+        else if (item.Type == NotifyItem.NotifyType.Error)
+        {
+            <div class="alert card amber accent-4 black-text">
+                <div class="alert-accent deep-orange accent-4 accent-4"></div>
+                <div class="card-content">
+                    <p><i class="material-icons">report</i><span>@item.Content</span></p>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="alert card light-blue accent-3 black-text">
+                <div class="alert-accent light-blue darken-4"></div>
+                <div class="card-content">
+                    <p><i class="material-icons">campaign</i><span>@item.Content</span></p>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+<div class="row">
+    <!-- Core service area -->
+    <div class="col s12 m12 l3 left-col">
+        <div class="grey darken-4 content-tile">
+            <p>Connection</p>
+            <div class="valign-wrapper" style="flex-grow: 1">
+                <div>
+                    <div>
+                        <a id="statebtn" class="green statebtn btn-floating pulse"></a>
+                        <span class="ping" id="latency">-- ms</span>
+                    </div>
+                    <span>@Model.ConnectionState.IP</span>
+                    <span><strong>@Model.ConnectionState.Agent.Platform</strong> (@Model.ConnectionState.Agent.Browser @Model.ConnectionState.Agent.BrowserVersion)</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col s12 m12 l9 right-col">
+        <div class="grey darken-4 content-tile">
+            <p class="list-header">Core Services</p>
+            <div data-simplebar class="list-wrapper height-fixed">
+                @foreach (var item in Model.CoreServiceList)
+                {
+                    <div class="item-content">
+                        @if (item.IsOnline)
+                        {
+                            <i class="material-icons green-text">check_circle</i>
+                        }
+                        else
+                        {
+                            <i class="material-icons orange-text">warning</i>
+                        }
+                        <span>@item.Name</span>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <!-- Region service area -->
+    <div class="col s12 m12 l12 center-col">
+        <div class="grey darken-4 content-tile">
+            @foreach (var i in Model.ServiceList)
+            {
+                <div class="region-item">
+                    <div class="valign-wrapper">
+                        @if (i.IsMaintenance)
+                        {
+                            <i class="material-icons orange-text">warning</i>
+                        }
+                        else if (i.SLA < 50 && i.IsOnline)
+                        {
+                            <i class="material-icons orange-text">fiber_manual_record</i>
+                        }
+                        else if (!i.IsOnline)
+                        {
+                            <i class="material-icons red-text">fiber_manual_record</i>
+                        }
+                        else
+                        {
+                            <i class="material-icons green-text">fiber_manual_record</i>
+                        }
+
+                        <p class="sla-percent">
+                            @if (i.IsMaintenance)
+                            {
+                                <span class="orange-text">점검 중</span>
+                            }
+                            else if (i.SLA < 50 && i.IsOnline)
+                            {
+                                <span class="orange-text">주의</span>
+                            }
+                            else if (!i.IsOnline)
+                            {
+                                <span class="red-text">연결 불가</span>
+                            }
+                            else
+                            {
+                                <span class="green-text">정상</span>
+                            }
+                            @i.SLA%<sup>*</sup>
+                        </p>
+                    </div>
+                    <div class="region-info right-align">
+                        <p>@i.SubName</p>
+                        <span>@i.Name</span>
+                    </div>
+                </div>
+            }
+            <p class="bottom-text"><sup>*</sup> 서비스 품질 지수 (SLA Percentage)는 유한회사클라우드인터렉티브가 자체적으로 고시한 기준에 따릅니다. </p>
+        </div>
+          
+    </div>
+</div>
+
+<!-- Reference time -->
+<div class="row">
+    <p class="right-align grey-text">Last updated: @Model.TimeStampToString() <a href="">새로고침</a></p>
+</div>
+
+<!-- page-specific js-->
+<script src="js/dashboard.js"></script>

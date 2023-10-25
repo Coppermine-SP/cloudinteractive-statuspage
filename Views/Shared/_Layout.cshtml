@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    
+    <!-- lib css -->
+    <link rel="stylesheet" href="~/lib/materialize/css/materialize.min.css" />
+    <link rel="stylesheet" href="~/lib/simplebar/css/simplebar.min.css" />
+    <link rel="stylesheet" href="~/lib/tooltips/css/tooltips.min.css"/>
+
+    <!-- site-specific css -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/fonts.css" asp-append-version="true" />
+
+</head>
+<body>
+<div class="container">
+    @RenderBody()
+</div>
+<footer>
+    <div class="container footer">
+        <p>유한회사클라우드인터렉티브는 위 정보의 신뢰성이나 오차에 대한 아무런 책임도 지지 않으며, 이는 온전히 사용자의 책임입니다.<br/>사용자의 개인 정보는 유한회사클라우드인터렉티브의 <a>개인정보취급방침</a> 에 따라 엄중하게 보호되고 있습니다.<br/><br/>
+        Copyright (C) 2020-2023 CloudInteractive Inc.</p>
+    </div>
+</footer>
+@await RenderSectionAsync("Scripts", required: false)
+<!-- lib js -->
+<script src="~/lib/materialize/js/materialize.min.js"></script>
+<script src="~/lib/simplebar/js/simplebar.js"></script>
+
+<!-- site-specific js -->
+
+</body>
+</html>

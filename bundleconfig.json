@@ -1,0 +1,20 @@
+[
+  {
+    "outputFileName": "wwwroot/lib/simplebar/js/simplebar.min.js",
+    "inputFiles": [
+      "wwwroot/lib/simplebar/js/simplebar.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/lib/simplebar/css/simplebar.min.css",
+    "inputFiles": [
+      "wwwroot/lib/simplebar/css/simplebar.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/lib/tooltips/css/tooltips.min.css",
+    "inputFiles": [
+      "wwwroot/lib/tooltips/css/tooltips.css"
+    ]
+  }
+]

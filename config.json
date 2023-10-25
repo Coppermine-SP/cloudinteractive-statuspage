@@ -1,0 +1,39 @@
+{
+  "ServerConfig": {
+    "ObserverTimeWindow": 1000,
+    "TimeoutThreshold": 1000,
+    "ShowAutoSummary": true,
+    "CoreServices": [
+      {
+        "IP": "10.10.20.10",
+        "Port": 135,
+        "Name": "로그온 및 도메인 서비스"
+      },
+      {
+        "IP": "10.10.20.10",
+        "Port": 53,
+        "Name": "냬부 DNS 서비스"
+      }
+    ],
+    "Services": [
+      {
+        "Name": "A1",
+        "SubName": "대한민국 남부",
+        "Url": "a1.foo.net",
+        "isMaintenance": false
+      },
+      {
+        "Name": "B2",
+        "SubName": "대한민국 남부",
+        "Url": "b2.foo.net",
+        "isMaintenance": false
+      },
+      {
+        "Name": "C3",
+        "SubName": "대한민국 남부",
+        "Url": "c3.foo.net",
+        "isMaintenance": false
+      }
+    ]
+  }
+}

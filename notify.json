@@ -1,0 +1,14 @@
+{
+  "NotifyConfig": {
+    "Notices": [
+      {
+        "Type": "Info",
+        "Content": "새로운 클라우드인터렉티브 C3 리전에 대해 자세히 알아보십시오."
+      },
+      {
+        "Type": "Warn",
+        "Content": "대한민국 남부지역 기상악화로 인한 피해 예상."
+      }
+    ] 
+  } 
+}
